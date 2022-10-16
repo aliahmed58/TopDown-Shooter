@@ -5,21 +5,28 @@
 #include "../headers/GameTexture.h"
 #include "../headers/GameObject.h"
 #include <iostream>
+#include "../headers/Player.h"
+#include <vector>
+#include "../headers/Bullet.h"
 
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
-
+GameObject* player;
 
 bool init();
 void close();
 
 int main(int argc, char* argv[]) {
+
+	vector<GameObject*> objects;
+
 	if (!init()) {
 		printf("Failed to init\n");
 	}
 	else {
-		GameObject x(10, 10, "./sprites/Player.png",gRenderer);
+		player = new Player(500, 500,gRenderer);
+		GameObject* bullet = new Bullet(900, 500, gRenderer, player_bullet_png);
 
 		bool quit = false;
 		SDL_Event e;
@@ -29,18 +36,48 @@ int main(int argc, char* argv[]) {
 				if (e.type == SDL_QUIT) {
 					quit = true;
 				}
+				if (e.key.keysym.sym == SDLK_SPACE) {
+					player->fire(objects);
+				}
 			}
-
+			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+			if (currentKeyStates[SDL_SCANCODE_UP]){
+				player->move(0, 1);
+			}
+			if (currentKeyStates[SDL_SCANCODE_DOWN]){
+				player->move(0, -1);
+			}
+			if (currentKeyStates[SDL_SCANCODE_LEFT]){
+				player->move(1, 0);
+			}
+			if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
+				player->move(-1, 0);
+			}
+			
 			// clear screen
 			SDL_RenderClear(gRenderer);
 			// renders sprite on screen
-			SDL_Rect clip = { 0, 0, 64, 64 };
-			cout << x.getTexture().getHeight();
+			player->render();
+
+			// render list items
+			for (int i = 0; i < objects.size(); i++) {
+				objects.at(i)->render();
+				objects.at(i)->move(0, 0.5);
+			}
+
+			// clean up list
+			for (int i = 0; i < objects.size(); i++) {
+				if (!objects.at(i)->isAlive()) {
+					delete objects.at(i);
+					objects.erase(objects.begin() + i);
+				}
+			}
+
 			// updates screen
 			SDL_RenderPresent(gRenderer);
-
 		}
-	}
+		}
+
 	close();
 
 	return 0;
@@ -98,5 +135,7 @@ void close() {
 
 	IMG_Quit();
 	SDL_Quit();
+
+	delete player;
 }
 

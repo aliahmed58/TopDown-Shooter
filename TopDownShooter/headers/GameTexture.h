@@ -14,7 +14,7 @@ public:
 	// free textures when not used
 	void free();
 	// render a texture
-	void render(int x, int y, SDL_Rect* clip = NULL);
+	void render(SDL_Rect* clip, SDL_Rect* render_rect);
 	// get dimensions
 	int getWidth();
 	int getHeight();

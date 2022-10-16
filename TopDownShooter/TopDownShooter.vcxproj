@@ -141,12 +141,14 @@
     <Image Include="sprites\ranger_bullets.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\GameTexture.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\Bullet.h" />
     <ClInclude Include="headers\consts.h" />
     <ClInclude Include="headers\GameObject.h" />
     <ClInclude Include="headers\GameTexture.h" />

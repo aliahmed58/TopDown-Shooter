@@ -59,13 +59,13 @@ bool GameTexture::loadTexture(string file_path) {
 
 }
 
-void GameTexture::render(int x, int y, SDL_Rect* clip) {
+void GameTexture::render(SDL_Rect* clip, SDL_Rect* render_rect) {
 	
 	// set rendering space
-	renderRect = { x, y, width, height };
+	//renderRect = { x, y, width, height };
 
 	// set clip dims
-	SDL_RenderCopy(renderer, obj_texture, clip, &renderRect);
+	SDL_RenderCopy(renderer, obj_texture, clip, render_rect);
 	
 }
 

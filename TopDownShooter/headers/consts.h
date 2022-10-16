@@ -9,3 +9,4 @@ const int SCREEN_HEIGHT = 720;
 const string dir = "./sprites/";
 
 const string player_png = dir + "Player.png";
+const string player_bullet_png = dir + "player_bullets.png";

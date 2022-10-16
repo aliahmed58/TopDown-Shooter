@@ -9,32 +9,40 @@ GameObject::GameObject(SDL_Renderer* renderer, string path) {
 	x = 0;
 	y = 0;
 	alive = true;
-	GameTexture z(renderer, path);
-	sprite = z;
+	this->renderer = renderer;
+	sprite = new GameTexture(renderer, path);
 }
 
-GameObject::GameObject(int x, int y, string file_path, SDL_Renderer* renderer) {
+GameObject::GameObject(double x, double y, string file_path, SDL_Renderer* renderer) {
 	this->x = x;
 	this->y = y;
-	GameTexture z(renderer, file_path);
-	sprite = z;
-	sprite.getRect().x = x;
-	sprite.getRect().y = y;
+	this->renderer = renderer;
+	alive = true;
+	sprite = new GameTexture(renderer, file_path);
+	sprite->getRect().x = x;
+	sprite->getRect().y = y;
 }
 
 GameObject::~GameObject() {
-	sprite.free();
+	sprite->free();
+	delete sprite;
 }
 
 bool GameObject::isAlive() {
 	return alive;
 }
 
-GameTexture& GameObject::getTexture() {
+GameTexture* GameObject::getTexture() {
 	return sprite;
 }
 
 void GameObject::render() {
-	SDL_Rect srcRect = { 0, 0, 64, 64 };
-	sprite.render(x,y, &srcRect);
+	SDL_Rect srcRect = { 0, 0,  sprite->getWidth(),sprite->getHeight() };
+	
+	render_rect = { (int) x, (int) y, sprite->getWidth(), sprite->getHeight() };
+	sprite->render(&srcRect, &render_rect);
+}
+
+void GameObject::fire(vector<GameObject*> &list) {
+
 }

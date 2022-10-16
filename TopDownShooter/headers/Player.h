@@ -5,10 +5,14 @@
 class Player : public GameObject {
 public:
 	Player();
-	Player(int x, int y, SDL_Renderer* renderer);
+	Player(double x, double y, SDL_Renderer* renderer);
 
-	void move();
-	void fire();
+	void translate(double x_val, double y_val);
+	void move(double x, double y);
+	void fire(vector<GameObject*> &list);
 
 private:
+	double tx;
+	double ty;
+
 };
