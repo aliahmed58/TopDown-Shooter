@@ -5,6 +5,7 @@ Player::Player() {}
 
 Player::Player(double x, double y, SDL_Renderer* renderer) : GameObject(x, y, player_png, renderer) {
 	friction = 1.6;
+	count = 0;
 }
 
 void Player::move(double x_val, double y_val) {
@@ -23,6 +24,9 @@ void Player::move(double x_val, double y_val) {
 
 	tx *= friction;
 	ty *= friction;
+
+	sprite->getRect().x = x;
+	sprite->getRect().y = y;
 }
 
 void Player::translate(double x_val, double y_val) {
@@ -32,9 +36,12 @@ void Player::translate(double x_val, double y_val) {
 
 void Player::power(vector<GameObject*> &objects, Uint32 time) {
 	
-	if (time % 2 == 0) {
-		Bullet* ins = new Bullet(x + 32, y , renderer, player_bullet_png, true);
+	if (count < 3) count++;
+
+	if (count >= 3) {
+		Bullet* ins = new Bullet(x + 32, y, renderer, player_bullet_png, true);
 		objects.insert(objects.begin(), ins);
+		count = 0;
 	}
 
 }

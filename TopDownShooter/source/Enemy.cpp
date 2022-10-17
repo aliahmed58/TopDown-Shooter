@@ -23,6 +23,9 @@ void Enemy::move(double x_val, double y_val) {
 
 	tx *= friction;
 	ty *= friction;
+
+	sprite->getRect().x = x;
+	sprite->getRect().y = y;
 }
 
 void Enemy::translate(double x_val, double y_val) {
@@ -40,4 +43,8 @@ void Enemy::render() {
 
 	render_rect = { (int)x, (int)y, sprite->getWidth(), sprite->getHeight() };
 	sprite->render(&srcRect, &render_rect, NULL, flipType);
+}
+
+void Enemy::power(vector<GameObject*> &list, Uint32 time) {
+
 }

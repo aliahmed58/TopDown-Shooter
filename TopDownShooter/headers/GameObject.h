@@ -11,12 +11,17 @@ public:
 	~GameObject();
 
 	bool isAlive();
+	void setAlive(bool alive);
 	GameTexture* getTexture();
+	int get_x();
+	int get_y();
 	
 	virtual void power(vector<GameObject*> &list, Uint32 time);
 	virtual void render();
 	virtual void registerHit();
 	virtual void move(double x, double y) = 0;
+
+	string get_type();
 
 protected:
 	double x;
@@ -26,5 +31,6 @@ protected:
 	GameTexture* sprite;
 	SDL_Rect render_rect;
 	SDL_Renderer* renderer;
+	string type;
 
 };

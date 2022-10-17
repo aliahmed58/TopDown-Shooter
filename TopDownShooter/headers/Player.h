@@ -14,5 +14,5 @@ public:
 private:
 	double tx;
 	double ty;
-
+	unsigned int count;
 };
