@@ -17,4 +17,6 @@ private:
 	double ty;
 	unsigned int shoot_time;
 	unsigned int missile_time;
+	short missile_count;
+	bool missile_fired;
 };

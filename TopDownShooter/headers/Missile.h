@@ -8,7 +8,6 @@ public:
 	Missile(double x, double y, SDL_Renderer* renderer, GameObject *target, Player *player);
 
 	void move(double x_val, double y_val, double deltaTime);
-	void fire(vector<GameObject*> &objects);
 	void calc_vector();
 	void render();
 

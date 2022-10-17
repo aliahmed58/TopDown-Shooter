@@ -4,10 +4,11 @@
 Bullet::Bullet() {}
 
 Bullet::Bullet(double x, double y, SDL_Renderer* renderer, 
-	string path, bool identifier, Player* player) : GameObject(x, y, path, renderer) {
+	string path, bool identifier, bool dir, Player* player) : GameObject(x, y, path, renderer) {
 
 	sprite->getRect().w = 4;
 	sprite->getRect().h = 16;
+	this->dir = dir;
 
 	collision_rect.x = sprite->getRect().x;
 	collision_rect.y = y;
@@ -61,6 +62,13 @@ void Bullet::move(double x_val, double y_val, double deltaTime) {
 		if (y < 704) y += 1 * (deltaTime / 2);
 		else alive = false;
 		if (x > 0 && x < SCREEN_WIDTH - sprite->getWidth()) x -= (unit_x * (deltaTime / 2));
+		else alive = false;
+	}
+
+	if (dir) {
+		if (y < SCREEN_HEIGHT - sprite->getHeight()) {
+			y += y_val * (deltaTime / 4);
+		}
 		else alive = false;
 	}
 

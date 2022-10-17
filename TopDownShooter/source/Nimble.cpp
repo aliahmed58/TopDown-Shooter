@@ -1,5 +1,6 @@
 #include "../headers/Nimble.h"
 #include "../headers/consts.h"
+#include "../headers/Bullet.h"
 
 Nimble::Nimble() {};
 
@@ -16,7 +17,6 @@ void Nimble::power(vector<GameObject*>& objects, Uint32 time, double deltaTime) 
 
 	if (random == 0) tx = 15;
 	else tx = -15;
-
 	tx *= xRatio;
 
 	int diff_x = x + random;
@@ -25,7 +25,14 @@ void Nimble::power(vector<GameObject*>& objects, Uint32 time, double deltaTime) 
 		sprite->getRect().x = x;
 
 	}
-}
+
+	if (fireLimit < 100) fireLimit++;
+	if (fireLimit >= 100) {
+			GameObject* bullet = new Bullet(x + 32, y + 65, renderer, nimble_bullets,true, false);
+			objects.insert(objects.begin(), bullet);
+			fireLimit = 0;
+		}
+	}
 
 void Nimble::registerHit() {
 

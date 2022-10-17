@@ -10,6 +10,7 @@
 #include "../headers/Nimble.h"
 #include "../headers/Ranger.h"
 #include "../headers/Bullet.h"
+#include "../headers/Missile.h"
 
 using namespace std;
 
@@ -25,6 +26,7 @@ bool check_collision(GameObject* a, GameObject* b, int y_offset);
 int main(int argc, char* argv[]) {
 
 	vector<GameObject*> objects;
+	vector<GameObject*> missiles;
 
 	if (!init()) {
 		printf("Failed to init\n");
@@ -41,6 +43,8 @@ int main(int argc, char* argv[]) {
 
 		bool quit = false;
 		SDL_Event e;
+		
+		bool obj_generated = false;
 
 		unsigned int counted_frames = 0;
 		unsigned int counter = 0;
@@ -58,17 +62,14 @@ int main(int argc, char* argv[]) {
 			int avgFps = counted_frames / (SDL_GetTicks() / 1000.0f);
 			if (avgFps > 2000000) avgFps = 0;
 
-			// generate enemies every 2 seconds
-			//if (((time + 990) / 10) % 300 == 0) {
-			//	create_enemies(objects);
-			//}
-			if (counter < 300) {
-				counter++;
-			}
-			if (counter >= 300) {
+			
+			// genearte enemies every 3 seconds
+			if (!obj_generated) {
 				create_enemies(objects);
-				counter = 0;
+				counter = SDL_GetTicks() + 4000;
+				obj_generated = true;
 			}
+			if (counter < SDL_GetTicks()) obj_generated = false;
 
 			while (SDL_PollEvent(&e) != 0) {
 				if (e.type == SDL_QUIT) {
@@ -112,11 +113,14 @@ int main(int argc, char* argv[]) {
 					objects.at(i)->power(objects, time, deltaTime);
 				}
 
+				// check missile collisions
+
+
 				for (int j = 0; j < objects.size(); j++) {
 
 					if (objects.at(i) == objects.at(j)) continue;
 					if (check_collision(objects.at(i), objects.at(j), 0)) {
-						if (objects.at(i)->get_type() == "player_bullet") {
+						if (objects.at(i)->get_type() == "player_bullet" || objects.at(i)->get_type() == "missile") {
 							objects.at(i)->kill();
 							objects.at(j)->kill();
 						}

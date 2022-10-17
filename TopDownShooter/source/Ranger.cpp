@@ -11,11 +11,11 @@ Ranger::Ranger(double x, double y, SDL_Renderer* renderer, Player* player) : Ene
 }
 
 void Ranger::power(vector<GameObject*> &objects, Uint32 time, double deltaTime) {
-	
-	if (fireLimit < 150) fireLimit++;
-	if (fireLimit >= 150) {
+
+	if (fireLimit < 100) fireLimit++;
+	if (fireLimit >= 100) {
 		if (player->get_y() > y) {
-			GameObject* bullet = new Bullet(x + 32, y + 65, renderer, ranger_bullets, false, player);
+			GameObject* bullet = new Bullet(x + 32, y + 65, renderer, ranger_bullets,false, false, player);
 			objects.insert(objects.begin(), bullet);
 			fireLimit = 0;
 		}

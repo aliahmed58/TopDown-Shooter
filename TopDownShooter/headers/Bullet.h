@@ -6,7 +6,7 @@ class Bullet : public GameObject {
 public:
 	Bullet();
 	Bullet(double x, double y, SDL_Renderer* renderer, string path, 
-		bool isPlayer, Player* player = nullptr);
+		bool isPlayer, bool dir, Player* player = nullptr);
 	
 	void move(double x, double y, double deltaTime);
 	void render();
@@ -23,5 +23,6 @@ private:
 
 	Player* player;
 	void calc_vector();
+	bool dir;
 
 };

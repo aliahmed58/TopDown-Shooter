@@ -8,5 +8,8 @@ public:
 
 	void power(vector<GameObject*> &objects, Uint32 time, double deltaTime);
 	void registerHit();
+
+private:
+	unsigned int fireLimit;
 	
 };
