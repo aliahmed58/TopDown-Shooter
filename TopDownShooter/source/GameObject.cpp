@@ -20,8 +20,14 @@ GameObject::GameObject(double x, double y, string file_path, SDL_Renderer* rende
 	type = "object";
 	alive = true;
 	sprite = new GameTexture(renderer, file_path);
+
 	sprite->getRect().x = x;
 	sprite->getRect().y = y;
+
+	collision_rect.x = sprite->getRect().x + 16;
+	collision_rect.y = y;
+	collision_rect.w = 32;
+	collision_rect.h = 64;
 }
 
 GameObject::~GameObject() {
@@ -45,7 +51,7 @@ void GameObject::render() {
 	sprite->render(&srcRect, &render_rect, NULL);
 }
 
-void GameObject::power(vector<GameObject*> &list, Uint32 time) {}
+void GameObject::power(vector<GameObject*> &list, Uint32 time, double deltaTime) {}
 
 void GameObject::registerHit() {}
 
@@ -61,6 +67,10 @@ string GameObject::get_type() {
 	return type;
 }
 
-void GameObject::setAlive(bool alive) {
-	this->alive = alive;
+void GameObject::kill() {
+	this->alive = false;
+}
+
+SDL_Rect& GameObject::getCollisionRect() {
+	return collision_rect;
 }

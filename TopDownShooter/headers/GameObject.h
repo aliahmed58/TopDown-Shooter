@@ -11,15 +11,16 @@ public:
 	~GameObject();
 
 	bool isAlive();
-	void setAlive(bool alive);
+	virtual void kill();
 	GameTexture* getTexture();
+	SDL_Rect& getCollisionRect();
 	int get_x();
 	int get_y();
 	
-	virtual void power(vector<GameObject*> &list, Uint32 time);
+	virtual void power(vector<GameObject*> &list, Uint32 time, double deltaTime);
 	virtual void render();
 	virtual void registerHit();
-	virtual void move(double x, double y) = 0;
+	virtual void move(double x, double y, double deltaTime) = 0;
 
 	string get_type();
 
@@ -32,5 +33,6 @@ protected:
 	SDL_Rect render_rect;
 	SDL_Renderer* renderer;
 	string type;
+	SDL_Rect collision_rect;
 
 };

@@ -8,7 +8,7 @@ public:
 	Bullet(double x, double y, SDL_Renderer* renderer, string path, 
 		bool isPlayer, Player* player = nullptr);
 	
-	void move(double x, double y);
+	void move(double x, double y, double deltaTime);
 	void render();
 
 private:

@@ -20,7 +20,7 @@ Player* player;
 bool init();
 void close();
 void create_enemies(vector<GameObject*>& objs);
-bool check_collision(SDL_Rect a, SDL_Rect b);
+bool check_collision(GameObject* a, GameObject* b, int y_offset);
 
 int main(int argc, char* argv[]) {
 
@@ -32,6 +32,9 @@ int main(int argc, char* argv[]) {
 	else {
 		// current start time
 		Uint32 time = 0;
+		Uint64 NOW = SDL_GetPerformanceCounter();
+		Uint64 LAST = 0;
+		double deltaTime = 0;
 
 		// create player object
 		player = new Player(500, 500, gRenderer);
@@ -44,6 +47,10 @@ int main(int argc, char* argv[]) {
 
 		while (!quit) {
 
+			LAST = NOW;
+			NOW = SDL_GetPerformanceCounter();
+			deltaTime = ((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
+
 			// get time
 			time = SDL_GetTicks();
 
@@ -55,11 +62,10 @@ int main(int argc, char* argv[]) {
 			//if (((time + 990) / 10) % 300 == 0) {
 			//	create_enemies(objects);
 			//}
-
-			if (counter < 90) {
+			if (counter < 300) {
 				counter++;
 			}
-			if (counter >= 90) {
+			if (counter >= 300) {
 				create_enemies(objects);
 				counter = 0;
 			}
@@ -69,55 +75,70 @@ int main(int argc, char* argv[]) {
 					quit = true;
 				}
 				if (e.key.keysym.sym == SDLK_SPACE) {
-					player->power(objects, time);
-
+					player->power(objects, time, deltaTime);
 				}
+				if ((e.key.keysym.sym) == SDLK_b) {
+					player->missile(objects, time);
+				}
+
 			}
 			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 			if (currentKeyStates[SDL_SCANCODE_UP]) {
-				player->move(0, 6);
+				player->move(0, 1, deltaTime);
 			}
 			if (currentKeyStates[SDL_SCANCODE_DOWN]) {
-				player->move(0, -6);
+				player->move(0, -1, deltaTime);
 			}
 			if (currentKeyStates[SDL_SCANCODE_LEFT]) {
-				player->move(6, 0);
+				player->move(1, 0, deltaTime);
 			}
 			if (currentKeyStates[SDL_SCANCODE_RIGHT]) {
-				player->move(-6, 0);
+				player->move(-1, 0, deltaTime);
 			}
 
 
 			// clear screen
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xaa);
 			SDL_RenderClear(gRenderer);
 			// renders sprite on screen
 			player->render();
 
-
 			// render list items
 			for (int i = 0; i < objects.size(); i++) {
 
-
-				cout << objects.at(0)->getTexture()->getRect().y << endl;
-
 				objects.at(i)->render();
-				objects.at(i)->move(0, 3);
-				objects.at(i)->power(objects, time);
+				objects.at(i)->move(0, 1, deltaTime);
+				if (objects.at(i)->get_type() == "ranger") {
+					objects.at(i)->power(objects, time, deltaTime);
+				}
 
 				for (int j = 0; j < objects.size(); j++) {
 
 					if (objects.at(i) == objects.at(j)) continue;
-					if (check_collision(objects.at(i)->getTexture()->getRect(), objects.at(j)->getTexture()->getRect())) {
+					if (check_collision(objects.at(i), objects.at(j), 0)) {
 						if (objects.at(i)->get_type() == "player_bullet") {
-							objects.at(i)->setAlive(false);
-								objects.at(j)->setAlive(false);
+							objects.at(i)->kill();
+							objects.at(j)->kill();
+						}
+						if (objects.at(i)->get_type() == "enemy_bullet") {
+							objects.at(i)->kill();
 						}
 					}
 				}
+				for (int j = 0; j < objects.size(); j++) {
+
+					if (objects.at(i) == objects.at(j)) continue;
+					if (check_collision(objects.at(i), objects.at(j), -10)) {
+						if (objects.at(j)->get_type() == "nimble") {
+							if (objects.at(i)->get_type() != "enemy_bullet") {
+								objects.at(j)->power(objects, time, deltaTime);
+							}
+						}
+					}
+				}
+				
 			}
-
 			// check collisions
-
 
 			// clean up list
 			for (int i = 0; i < objects.size(); i++) {
@@ -167,7 +188,7 @@ bool init() {
 			}
 			else {
 				// init renderer color
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(gRenderer, 0x00,0x00,0x00,0x00);
 
 				//init png loading
 				int imgFlags = IMG_INIT_PNG;
@@ -219,48 +240,15 @@ void close() {
 	delete player;
 }
 
-bool check_collision(SDL_Rect a, SDL_Rect b) {
+bool check_collision(GameObject* a, GameObject* b, int y_offset) {
 
-	cout << "called" << endl;
+	SDL_Rect rect1 = a->getCollisionRect();
+	SDL_Rect rect2 = b->getCollisionRect();
 
-	int leftA, leftB;
-	int rightA, rightB;
-	int topA, topB;
-	int bottomA, bottomB;
-
-	//Calculate the sides of rect A
-	leftA = a.x;
-	rightA = a.x + a.w;
-	topA = a.y;
-	bottomA = a.y + a.h;
-
-	//Calculate the sides of rect B
-	leftB = b.x;
-	rightB = b.x + b.w;
-	topB = b.y;
-	bottomB = b.y + b.h;
-
-	//If any of the sides from A are outside of B
-	if (bottomA <= topB)
-	{
-		return false;
-	}
-
-	if (topA >= bottomB)
-	{
-		return false;
-	}
-
-	if (rightA <= leftB)
-	{
-		return false;
-	}
-
-	if (leftA >= rightB)
-	{
-		return false;
-	}
-
-	//If none of the sides from A are outside B
-	return true;
+	return (
+		rect1.x < rect2.x + rect2.w &&
+		rect1.x + rect1.w > rect2.x &&
+		rect1.y + y_offset < rect2.y + rect2.h &&
+		rect1.h + rect1.y + y_offset> rect2.y
+		);
 }

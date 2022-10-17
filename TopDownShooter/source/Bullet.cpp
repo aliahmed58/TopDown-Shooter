@@ -6,6 +6,14 @@ Bullet::Bullet() {}
 Bullet::Bullet(double x, double y, SDL_Renderer* renderer, 
 	string path, bool identifier, Player* player) : GameObject(x, y, path, renderer) {
 
+	sprite->getRect().w = 4;
+	sprite->getRect().h = 16;
+
+	collision_rect.x = sprite->getRect().x;
+	collision_rect.y = y;
+	collision_rect.w = 4;
+	collision_rect.h = 16;
+
 	this->player = player;
 
 	if (!identifier) {
@@ -40,24 +48,26 @@ Bullet::Bullet(double x, double y, SDL_Renderer* renderer,
 	rects[3].h = 16;
 }
 
-void Bullet::move(double x_val, double y_val) {
+void Bullet::move(double x_val, double y_val, double deltaTime) {
 	// if player is shooting
 	if (isPlayer) {
 		if (y > 0)
-			y -= y_val + 1;
+			y -= (y_val + 1) * (deltaTime /4);
 		else alive = false;
 	}
 	// if ranger shoots
 	else {
 
-		if (y < 704) y += 10;
+		if (y < 704) y += 1 * (deltaTime / 2);
 		else alive = false;
-		if (x > 0 && x < SCREEN_WIDTH - sprite->getWidth()) x -= (unit_x * 4);
+		if (x > 0 && x < SCREEN_WIDTH - sprite->getWidth()) x -= (unit_x * (deltaTime / 2));
 		else alive = false;
 	}
 
 	sprite->getRect().y = y;
 	sprite->getRect().x = x;
+	collision_rect.x = x;
+	collision_rect.y = y;
 }
 
 void Bullet::render() {

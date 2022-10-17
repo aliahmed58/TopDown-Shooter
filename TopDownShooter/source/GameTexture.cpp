@@ -9,11 +9,11 @@ GameTexture::GameTexture() {
 GameTexture::GameTexture(SDL_Renderer* gRenderer, string file_path) {
 	obj_texture = NULL;
 	renderer = gRenderer;
-	height = width = 0;
 	bool loaded = this->loadTexture(file_path);
 	if (!loaded) {
 		printf("Could not load media\n");
 	}
+
 }
 
 GameTexture::~GameTexture() {
@@ -49,6 +49,8 @@ bool GameTexture::loadTexture(string file_path) {
 		else {
 			width = temp->w;
 			height = temp->h;
+			renderRect.w = width;
+			renderRect.h = height;
 		}
 
 		SDL_FreeSurface(temp);
@@ -61,8 +63,8 @@ bool GameTexture::loadTexture(string file_path) {
 
 void GameTexture::render(SDL_Rect* clip, SDL_Rect* render_rect, double angle, 
 	SDL_RendererFlip flipType ) {
-
-	SDL_RenderCopyEx(renderer, obj_texture, clip, render_rect, angle, NULL, flipType);	
+	SDL_RenderCopyEx(renderer, obj_texture, clip, render_rect, angle, NULL, flipType);
+	
 }
 
 int GameTexture::getHeight() {
