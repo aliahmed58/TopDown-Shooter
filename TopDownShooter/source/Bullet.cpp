@@ -3,32 +3,51 @@
 
 Bullet::Bullet() {}
 
-Bullet::Bullet(double x, double y, SDL_Renderer* renderer, string path) : GameObject(x, y, path, renderer) {
+Bullet::Bullet(double x, double y, SDL_Renderer* renderer, string path, bool identifier) : GameObject(x, y, path, renderer) {
 	frame = 0;
+	isPlayer = identifier;
+
+	rects[0].x = 0;
+	rects[0].y = 0;
+	rects[0].w = 4;
+	rects[0].h = 16;
+
+	rects[1].x = 4;
+	rects[1].y = 0;
+	rects[1].w = 4;
+	rects[1].h = 16;
+
+	rects[2].x = 8;
+	rects[2].y = 0;
+	rects[2].w = 6;
+	rects[2].h = 16;
+
+	rects[3].x = 12;
+	rects[3].y = 0;
+	rects[3].w = 4;
+	rects[3].h = 16;
 }
 
 void Bullet::move(double x_val, double y_val) {
-	if (y > 0) {
-		this->y -= y_val;
+	// if player is shooting
+	if (isPlayer) {
+		if (y > 0)
+			y -= y_val;
+		else alive = false;
 	}
+	// if ranger shoots
 	else {
-		alive = false;
+
 	}
 }
 
 void Bullet::render() {
-	SDL_Rect clip = { 0, 0, 4, sprite->getHeight() };
-	SDL_Rect render_rect[4];
-	int c = 0;
-	for (int i = 0; i < 4; i++) {
-		render_rect[i] = {(int)x ,(int) y, c, 16};
-		c += 4;
-	}
+	SDL_Rect clip = { x, y, 4, sprite->getHeight() };
 	
-	SDL_Rect destrec = render_rect[1];
-	if (frame % 36 == 0)
-		destrec = render_rect[frame % 4];
-	frame++;
+	SDL_Rect destrec;
+	Uint32 time = SDL_GetTicks();
 
-	sprite->render(&clip, &destrec);
+	destrec = rects[time % 4];
+
+	sprite->render(&destrec, &clip, NULL);
 }

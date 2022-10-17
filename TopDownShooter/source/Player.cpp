@@ -10,8 +10,6 @@ Player::Player(double x, double y, SDL_Renderer* renderer) : GameObject(x, y, pl
 void Player::move(double x_val, double y_val) {
 	translate(x_val, y_val);
 
-	//cout << "x: " << x << "y: " << y << endl;
-
 	int temp_x = x - x_val;
 	int temp_y = y - y_val;
 
@@ -32,12 +30,11 @@ void Player::translate(double x_val, double y_val) {
 	ty = y_val;
 }
 
-void Player::fire(vector<GameObject*> &objects) {
+void Player::power(vector<GameObject*> &objects, Uint32 time) {
 	
-	Bullet* ins = new Bullet(x + 16, y + 32, renderer, player_bullet_png);
-	Bullet* ins2 = new Bullet(x + 48, y + 32, renderer, player_bullet_png);
-	objects.insert(objects.begin(), ins);
-	objects.insert(objects.begin(), ins2);
+	if (time % 2 == 0) {
+		Bullet* ins = new Bullet(x + 32, y , renderer, player_bullet_png, true);
+		objects.insert(objects.begin(), ins);
+	}
 
-	cout << objects.size() << endl;
 }

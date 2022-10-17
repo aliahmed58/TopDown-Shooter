@@ -142,17 +142,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Bullet.cpp" />
+    <ClCompile Include="source\Enemy.cpp" />
     <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\GameTexture.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\Missile.cpp" />
+    <ClCompile Include="source\Nimble.cpp" />
     <ClCompile Include="source\Player.cpp" />
+    <ClCompile Include="source\Ranger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Bullet.h" />
     <ClInclude Include="headers\consts.h" />
+    <ClInclude Include="headers\Enemy.h" />
     <ClInclude Include="headers\GameObject.h" />
     <ClInclude Include="headers\GameTexture.h" />
+    <ClInclude Include="headers\Missile.h" />
+    <ClInclude Include="headers\Nimble.h" />
     <ClInclude Include="headers\Player.h" />
+    <ClInclude Include="headers\Ranger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

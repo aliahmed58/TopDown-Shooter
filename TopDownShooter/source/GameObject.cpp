@@ -37,12 +37,17 @@ GameTexture* GameObject::getTexture() {
 }
 
 void GameObject::render() {
+
 	SDL_Rect srcRect = { 0, 0,  sprite->getWidth(),sprite->getHeight() };
 	
 	render_rect = { (int) x, (int) y, sprite->getWidth(), sprite->getHeight() };
-	sprite->render(&srcRect, &render_rect);
+	sprite->render(&srcRect, &render_rect, NULL);
 }
 
-void GameObject::fire(vector<GameObject*> &list) {
+void GameObject::power(vector<GameObject*> &list, Uint32 time) {
+
+}
+
+void GameObject::registerHit() {
 
 }

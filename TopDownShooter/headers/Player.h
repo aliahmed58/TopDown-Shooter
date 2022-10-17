@@ -9,7 +9,7 @@ public:
 
 	void translate(double x_val, double y_val);
 	void move(double x, double y);
-	void fire(vector<GameObject*> &list);
+	void power(vector<GameObject*> &list, Uint32 time);
 
 private:
 	double tx;

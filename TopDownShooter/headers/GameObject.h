@@ -13,8 +13,9 @@ public:
 	bool isAlive();
 	GameTexture* getTexture();
 	
-	virtual void fire(vector<GameObject*> &list);
+	virtual void power(vector<GameObject*> &list, Uint32 time);
 	virtual void render();
+	virtual void registerHit();
 	virtual void move(double x, double y) = 0;
 
 protected:
