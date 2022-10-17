@@ -17,4 +17,5 @@ protected:
 	int health;
 	double tx;
 	double ty;
+	bool fired;
 };

@@ -4,29 +4,25 @@
 Bullet::Bullet() {}
 
 Bullet::Bullet(double x, double y, SDL_Renderer* renderer, 
-	string path, bool identifier, bool dir, Player* player) : GameObject(x, y, path, renderer) {
+	string path, string type, Player* player) : GameObject(x, y, path, renderer) {
 
 	sprite->getRect().w = 4;
 	sprite->getRect().h = 16;
-	this->dir = dir;
 
 	collision_rect.x = sprite->getRect().x;
 	collision_rect.y = y;
 	collision_rect.w = 4;
 	collision_rect.h = 16;
 
+	this->type = type;
+
 	this->player = player;
 
-	if (!identifier) {
+	if (type == "ranger_bullet") {
 		calc_vector();
-		type = "enemy_bullet";
-	}
-	else {
-		type = "player_bullet";
 	}
 
 	frame = 0;
-	isPlayer = identifier;
 
 	rects[0].x = 0;
 	rects[0].y = 0;
@@ -51,21 +47,19 @@ Bullet::Bullet(double x, double y, SDL_Renderer* renderer,
 
 void Bullet::move(double x_val, double y_val, double deltaTime) {
 	// if player is shooting
-	if (isPlayer) {
+	if (type == "player_bullet") {
 		if (y > 0)
 			y -= (y_val + 1) * (deltaTime /4);
 		else alive = false;
 	}
 	// if ranger shoots
-	else {
-
+	if (type == "ranger_bullet") {
 		if (y < 704) y += 1 * (deltaTime / 2);
 		else alive = false;
 		if (x > 0 && x < SCREEN_WIDTH - sprite->getWidth()) x -= (unit_x * (deltaTime / 2));
 		else alive = false;
 	}
-
-	if (dir) {
+	if (type == "nimble_bullet") {
 		if (y < SCREEN_HEIGHT - sprite->getHeight()) {
 			y += y_val * (deltaTime / 4);
 		}

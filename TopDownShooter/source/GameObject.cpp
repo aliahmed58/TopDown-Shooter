@@ -21,6 +21,11 @@ GameObject::GameObject(double x, double y, string file_path, SDL_Renderer* rende
 	alive = true;
 	sprite = new GameTexture(renderer, file_path);
 
+	RenderHeight = sprite->getHeight();
+	RenderWidth = sprite->getWidth();
+
+	angle = 0;
+
 	sprite->getRect().x = x;
 	sprite->getRect().y = y;
 
@@ -73,4 +78,8 @@ void GameObject::kill() {
 
 SDL_Rect& GameObject::getCollisionRect() {
 	return collision_rect;
+}
+
+void GameObject::fire(vector<GameObject*> &objects, double time) {
+
 }

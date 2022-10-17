@@ -78,3 +78,7 @@ int GameTexture::getWidth() {
 SDL_Rect& GameTexture::getRect() {
 	return renderRect;
 }
+
+SDL_Texture* GameTexture::get_texture() {
+	return obj_texture;
+}

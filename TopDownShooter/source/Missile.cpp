@@ -49,7 +49,6 @@ void Missile::calc_vector() {
 	angle = atan2(abs(diff_y), abs(diff_x));
 	angle = angle * (180 / 3.14159);
 	// fix too much tilt
-	angle -= (magnitude /5);
 
 	if (x > target->get_x()) {
 		angle *= -1;

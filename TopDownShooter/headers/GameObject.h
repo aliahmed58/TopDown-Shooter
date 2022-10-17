@@ -21,6 +21,7 @@ public:
 	virtual void render();
 	virtual void registerHit();
 	virtual void move(double x, double y, double deltaTime) = 0;
+	virtual void fire(vector<GameObject*>& objs, double deltaTime);
 
 	string get_type();
 
@@ -34,5 +35,10 @@ protected:
 	SDL_Renderer* renderer;
 	string type;
 	SDL_Rect collision_rect;
+
+	int RenderHeight;
+	int RenderWidth;
+
+	double angle;
 
 };

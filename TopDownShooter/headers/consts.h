@@ -15,3 +15,5 @@ const string ranger_png = dir + "Ranger.png";
 const string nimble_bullets = dir + "nimble_bullets.png";
 const string ranger_bullets = dir + "ranger_bullets.png";
 const string player_bullet_png = dir + "player_bullets.png";
+const string smoke_png = "./images/smoke.png";
+const string explosion_png = "./images/explosion.png";

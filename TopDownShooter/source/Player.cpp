@@ -1,11 +1,12 @@
 #include "../headers/Player.h"
 #include "../headers/Bullet.h"
 #include "../headers/Missile.h"
+#include "../headers/Smoke.h"
 
 Player::Player() {}
 
 Player::Player(double x, double y, SDL_Renderer* renderer) : GameObject(x, y, player_png, renderer) {
-	friction = 1.6;
+	friction = 0.9;
 	shoot_time = 0;
 	missile_fired = false;
 	missile_count = 10;
@@ -14,19 +15,21 @@ Player::Player(double x, double y, SDL_Renderer* renderer) : GameObject(x, y, pl
 void Player::move(double x_val, double y_val, double deltaTime) {
 	translate(x_val, y_val);
 
-	int temp_x = x - x_val;
-	int temp_y = y - y_val;
+	for (int i = 0; i < 3; i++) {
+		x -= tx * (deltaTime / 3);
+		y -= ty * (deltaTime / 3);
 
-	if (x < 0) x = 0;
-	if (x > SCREEN_WIDTH - sprite->getWidth()) x = SCREEN_WIDTH - sprite->getWidth();
-	if (y > SCREEN_HEIGHT - sprite->getWidth()) y = SCREEN_HEIGHT - sprite->getHeight();
-	if (y < 0) y = 0;
+		tx *= friction;
+		ty *= friction;
+	}
 
-	x -= tx * deltaTime;
-	y -= ty * deltaTime;
+	int temp_x = x - tx;
+	int temp_y = y - ty;
 
-	tx *= friction;
-	ty *= friction;
+	if (temp_x < 0) x = 0;
+	if (temp_x > SCREEN_WIDTH - sprite->getWidth()) x = SCREEN_WIDTH - sprite->getWidth();
+	if (temp_y > SCREEN_HEIGHT - sprite->getWidth()) y = SCREEN_HEIGHT - sprite->getHeight();
+	if (temp_y < 0) y = 0;
 
 	sprite->getRect().x = x;
 	sprite->getRect().y = y;
@@ -44,7 +47,7 @@ void Player::translate(double x_val, double y_val) {
 void Player::power(vector<GameObject*> &objects, Uint32 time, double deltaTime) {
 	
 	if (shoot_time > SDL_GetTicks()) {
-		Bullet* ins = new Bullet(x + 32, y, renderer, player_bullet_png, false, true);
+		Bullet* ins = new Bullet(x + 32, y, renderer, player_bullet_png, "player_bullet", this);
 		objects.insert(objects.begin(), ins);
 	}
 
@@ -77,4 +80,8 @@ void Player::missile(vector<GameObject*>& objs, Uint32 time) {
 		}
 
 	}
+}
+
+void Player::reset_player() {
+	missile_count = 10;
 }

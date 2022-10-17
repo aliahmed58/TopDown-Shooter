@@ -11,6 +11,7 @@ public:
 	void move(double x, double y, double deltaTime);
 	void power(vector<GameObject*> &list, Uint32 time, double deltaTime);
 	void missile(vector<GameObject*> &objs, Uint32 time);
+	void reset_player();
 
 private:
 	double tx;

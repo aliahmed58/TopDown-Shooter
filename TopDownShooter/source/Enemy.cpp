@@ -5,7 +5,7 @@ Enemy::Enemy() {};
 
 Enemy::Enemy(double x, double y, string path, SDL_Renderer* renderer) : GameObject(x, y, path, renderer) {
 	friction = 0.99;
-
+	fired = false;
 	collision_rect.x = sprite->getRect().x + 16;
 	collision_rect.y = y;
 
@@ -14,24 +14,18 @@ Enemy::Enemy(double x, double y, string path, SDL_Renderer* renderer) : GameObje
 void Enemy::move(double x_val, double y_val, double deltaTime) {
 	translate(x_val, y_val);
 
-	int temp_x = x - x_val;
-	int temp_y = y - y_val;
-
-	if (x < 0) x = 0;
-	if (x > SCREEN_WIDTH ) alive = false;
-	if (y > SCREEN_HEIGHT) alive = false;
-	if (y < 0) y = 0;
-
-	x += tx;
+	x -= tx * (deltaTime / 10);
 	y += ty * (deltaTime / 10);
 
-	tx *= friction;
-	ty *= friction;
+	int temp_x = x - tx;
+	int temp_y = y - ty;
+
+	if (temp_y > SCREEN_HEIGHT - 32) alive = false;
 
 	sprite->getRect().x = x;
 	sprite->getRect().y = y;
 
-	collision_rect.x = x + 16;
+	collision_rect.x = sprite->getRect().x + 16;
 	collision_rect.y = y;
 }
 

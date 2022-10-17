@@ -20,6 +20,7 @@ public:
 	int getHeight();
 	//get rect
 	SDL_Rect& getRect();
+	SDL_Texture* get_texture();
 
 private:
 	//actual texture

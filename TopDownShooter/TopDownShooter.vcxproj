@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\vclib\SDL2_image-2.6.2\include;C:\vclib\SDL2-2.24.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\vclib\SDL2_image-2.6.2\lib\x64;C:\vclib\SDL2-2.24.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\vclib\SDL2_ttf-2.20.1\include;C:\vclib\SDL2_image-2.6.2\include;C:\vclib\SDL2-2.24.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\vclib\SDL2_ttf-2.20.1\lib\x64;C:\vclib\SDL2_image-2.6.2\lib\x64;C:\vclib\SDL2-2.24.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -112,7 +112,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="source\Bullet.cpp" />
     <ClCompile Include="source\Enemy.cpp" />
+    <ClCompile Include="source\Explosion.cpp" />
     <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\GameTexture.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -150,17 +151,20 @@
     <ClCompile Include="source\Nimble.cpp" />
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Ranger.cpp" />
+    <ClCompile Include="source\Smoke.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Bullet.h" />
     <ClInclude Include="headers\consts.h" />
     <ClInclude Include="headers\Enemy.h" />
+    <ClInclude Include="headers\Explosion.h" />
     <ClInclude Include="headers\GameObject.h" />
     <ClInclude Include="headers\GameTexture.h" />
     <ClInclude Include="headers\Missile.h" />
     <ClInclude Include="headers\Nimble.h" />
     <ClInclude Include="headers\Player.h" />
     <ClInclude Include="headers\Ranger.h" />
+    <ClInclude Include="headers\Smoke.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
