@@ -11,13 +11,13 @@ public:
 	~GameObject();
 
 	bool isAlive();
-	virtual void kill();
+	virtual void kill(double x, double y, vector<GameObject*> &objs);
 	GameTexture* getTexture();
 	SDL_Rect& getCollisionRect();
 	int get_x();
 	int get_y();
 	
-	virtual void power(vector<GameObject*> &list, Uint32 time, double deltaTime);
+	virtual void power(vector<GameObject*> &list, double deltaTime);
 	virtual void render();
 	virtual void registerHit();
 	virtual void move(double x, double y, double deltaTime) = 0;

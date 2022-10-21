@@ -6,9 +6,7 @@ public:
 	Enemy();
 	Enemy(double x, double y,string path, SDL_Renderer* renderer);
 
-	virtual void registerHit();
-
-	virtual void kill();
+	virtual void kill(double x, double y, vector<GameObject*>& objs);
 	void move(double x_val, double y_val, double deltaTime);
 	void translate(double x_val, double y_val);
 	void render();
@@ -18,4 +16,7 @@ protected:
 	double tx;
 	double ty;
 	bool fired;
+
+private:
+	bool explosion;
 };

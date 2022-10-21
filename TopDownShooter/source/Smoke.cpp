@@ -8,8 +8,8 @@ Smoke::Smoke(double x, double y, SDL_Renderer* renderer) : GameObject(x, y, smok
 	this->y = y;
 	type = "smoke";
 	SDL_SetTextureBlendMode(this->getTexture()->get_texture(), SDL_BLENDMODE_BLEND);
-	this->RenderHeight = 14;
-	this->RenderWidth = 14;
+	this->RenderHeight = 9 + rand()%4;
+	this->RenderWidth = RenderHeight;
 	
 }
 
@@ -28,4 +28,12 @@ void Smoke::move(double x_val, double y_val, double deltaTime) {
 	RenderWidth += ChangeInSize;
 
 	SDL_SetTextureAlphaMod(this->sprite->get_texture() , this->alpha);
+}
+
+void Smoke::render() {
+
+	SDL_Rect srcRect = { 0, 0, sprite->getWidth(), sprite->getHeight()};
+
+	render_rect = { (int)x, (int)y, RenderWidth, RenderHeight };
+	sprite->render(&srcRect, &render_rect, NULL);
 }

@@ -10,7 +10,7 @@ Ranger::Ranger(double x, double y, SDL_Renderer* renderer, Player* player) : Ene
 	fireLimit = 0;
 }
 
-void Ranger::power(vector<GameObject*> &objects, Uint32 time, double deltaTime) {
+void Ranger::power(vector<GameObject*> &objects, double deltaTime) {
 	
 	if (!fired) {
 		if (player->get_y() > y) {
@@ -22,17 +22,4 @@ void Ranger::power(vector<GameObject*> &objects, Uint32 time, double deltaTime) 
 	}
 	if (fireLimit < SDL_GetTicks()) fired = false;
 	
-}
-
-void Ranger::registerHit() {
-
-}
-
-void Ranger::kill() {
-	if (health <= 0) {
-		alive = false;
-	}
-	else {
-		health--;
-	}
 }

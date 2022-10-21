@@ -44,7 +44,7 @@ void Player::translate(double x_val, double y_val) {
 	ty = y_val;
 }
 
-void Player::power(vector<GameObject*> &objects, Uint32 time, double deltaTime) {
+void Player::power(vector<GameObject*> &objects, double deltaTime) {
 	
 	if (shoot_time > SDL_GetTicks()) {
 		Bullet* ins = new Bullet(x + 32, y, renderer, player_bullet_png, "player_bullet", this);

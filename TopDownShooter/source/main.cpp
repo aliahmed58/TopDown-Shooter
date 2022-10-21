@@ -13,6 +13,7 @@
 #include "../headers/Missile.h"
 #include <SDL_ttf.h>
 #include "../headers/Smoke.h"
+#include "../headers/Explosion.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ void close();
 void create_enemies(vector<GameObject*>& objs);
 bool check_collision(GameObject* a, GameObject* b, int y_offset);
 void clear_list(vector<GameObject*>& objects, bool all);
+void update_delta(Uint64& LAST, Uint64& NOW, double& deltaTime);
 
 //shaz
 bool loadMedia();
@@ -44,35 +46,29 @@ int main(int argc, char* argv[]) {
 	vector<GameObject*> missiles;
 	bool inMenu = true;
 
-
 	if (!init()) {
 		printf("Failed to init\n");
 	}
 	else {
 		loadMedia();
-		// current start time
-		Uint32 time = 0;
+
 		Uint64 NOW = SDL_GetPerformanceCounter();
 		Uint64 LAST = 0;
 		double deltaTime = 0;
 
+		bool explosion = false;
 		// create player object
 		player = new Player(500, 500, gRenderer);
 
 		bool quit = false;
 		SDL_Event e;
 
-		bool obj_generated = false;
-		bool particle_generated = false;
-
-		unsigned int counted_frames = 0;
-		unsigned int render_count = 0;
 		unsigned int counter = 0;
+		unsigned int smoke_counter = 0;
 		CreateMenuScreen();
-		
 
 		while (!quit) {
-
+			update_delta(LAST, NOW, deltaTime);
 			while (inMenu) {
 				SDL_RenderPresent(gRenderer);
 				while (SDL_PollEvent(&e) != 0)
@@ -81,45 +77,44 @@ int main(int argc, char* argv[]) {
 					if (e.type == SDL_QUIT) {
 						close(); exit(0);
 					}
+
 					if (e.type == SDL_MOUSEBUTTONDOWN) {
 						if (e.button.x > 575 && e.button.x < 775 && e.button.y > 475 && e.button.y < 575) { close(); exit(0); } //EXIT
 						if (e.button.x > 575 && e.button.x < 775 && e.button.y > 275 && e.button.y < 375) { inMenu = false; } //PLAY
 					}
 				}
+				update_delta(LAST, NOW, deltaTime);
+			}
+			counter += deltaTime;
+
+			if (counter > 4000) {
+				create_enemies(objects);
+				counter = 0;
 			}
 
-			LAST = NOW;
-			NOW = SDL_GetPerformanceCounter();
-			deltaTime = ((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
-
-			time = 0;
-			// get time
-
-
-			// calculate fps
-			int avgFps = counted_frames / (SDL_GetTicks() / 1000.0f);
-			if (avgFps > 2000000) avgFps = 0;
-
-			// genearte enemies every 3 seconds
-			if (!inMenu) {
-				if (!obj_generated) {
-					create_enemies(objects);
-					counter = SDL_GetTicks() + 4000;
-					obj_generated = true;
+			smoke_counter += deltaTime;
+			if (smoke_counter > 1) {
+				smoke_counter = 0;
+				for (int i = 0; i < objects.size(); i++) {
+					if (objects.at(i)->get_type() == "missile") {
+						int x = objects.at(i)->get_x();
+						int y = objects.at(i)->get_y();
+						GameObject* S1 = new Smoke(x + 16, y + 32, gRenderer);
+						objects.insert(objects.begin(), S1);
+						break;
+					}
 				}
-				if (counter < SDL_GetTicks()) obj_generated = false;
 			}
-
-
+		
 			while (SDL_PollEvent(&e) != 0) {
 				if (e.type == SDL_QUIT) {
 					quit = true;
 				}
 				if (e.key.keysym.sym == SDLK_SPACE) {
-					player->power(objects, time, deltaTime);
+					player->power(objects, deltaTime);
 				}
 				if ((e.key.keysym.sym) == SDLK_b) {
-					player->missile(objects, time);
+					player->missile(objects, SDL_GetTicks());
 				}
 
 			}
@@ -139,53 +134,26 @@ int main(int argc, char* argv[]) {
 
 
 			// clear screen
-			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xaa);
+			SDL_SetRenderDrawColor(gRenderer, 0x36, 0x45, 0x4F, 0xaa);
 			SDL_RenderClear(gRenderer);
 			// renders sprite on screen
 			player->render();
-
-			render_count = 0;
-
-			// add smoke
-			/*for (int j = 0; j < objects.size(); j++) {
-				if (objects.at(j)->get_type() == "missile") {
-					if (render_count < 50) {
-						GameObject* smoke = new Smoke(objects.at(j)->get_x(), objects.at(j)->get_y(), gRenderer);
-						objects.insert(objects.begin(), smoke);
-						render_count++;
-					}
-					else {
-						break;
-					}
-				}
-			} */
 
 			// render list items
 			for (int i = 0; i < objects.size(); i++) {
 
 				objects.at(i)->render();
 				objects.at(i)->move(0, 1, deltaTime);
-				objects.at(i)->fire(objects, time);
+				objects.at(i)->fire(objects, SDL_GetTicks());
 
 				if (check_collision(player, objects.at(i), 0)) {
 					if (objects.at(i)->get_type() != "player_bullet" &&
 						objects.at(i)->get_type() != "missile") {
-
-						player->kill();
-						for (int j = 0; j < objects.size(); j++) {
-							objects.at(i)->kill();
-						}
-						player->reset_player();
-
-						CreateMenuScreen();
-						inMenu = true;
-						
-						break;
 					}
 				}
 
 				if (objects.at(i)->get_type() == "ranger") {
-					objects.at(i)->power(objects, time, deltaTime);
+					objects.at(i)->power(objects, deltaTime);
 				}
 
 				for (int j = 0; j < objects.size(); j++) {
@@ -193,14 +161,15 @@ int main(int argc, char* argv[]) {
 					if (objects.at(i) == objects.at(j)) continue;
 					if (check_collision(objects.at(i), objects.at(j), 0)) {
 						if (objects.at(i)->get_type() == "player_bullet") {
-							objects.at(i)->kill();
-							objects.at(j)->kill();
+							explosion = true;
+							objects.at(i)->kill(objects.at(i)->get_x(), objects.at(i)->get_y(), objects);
+							objects.at(j)->kill(objects.at(j)->get_x(), objects.at(j)->get_y(), objects);
 						}
 						if (objects.at(i)->get_type() == "missile") {
 							if (!(objects.at(j)->get_type() == "ranger_bullet") &&
 								!(objects.at(j)->get_type() == "nimble_bullet")) {
-								objects.at(i)->kill();
-								objects.at(j)->kill();
+								objects.at(i)->kill(objects.at(i)->get_x(), objects.at(i)->get_y(), objects);
+								objects.at(j)->kill(objects.at(j)->get_x(), objects.at(j)->get_y(), objects);
 							}
 						}
 					}
@@ -212,7 +181,7 @@ int main(int argc, char* argv[]) {
 						if (objects.at(j)->get_type() == "nimble") {
 							if (objects.at(i)->get_type() == "player_bullet" ||
 								objects.at(i)->get_type() == "missile") {
-								objects.at(j)->power(objects, time, deltaTime);
+								objects.at(j)->power(objects, deltaTime);
 							}
 						}
 					}
@@ -223,8 +192,7 @@ int main(int argc, char* argv[]) {
 			clear_list(objects, false);
 			// updates screen
 			SDL_RenderPresent(gRenderer);
-			++counted_frames;
-			time = SDL_GetTicks();
+			
 		}
 	}
 
@@ -525,7 +493,15 @@ bool check_collision(GameObject* a, GameObject* b, int y_offset) {
 		);
 }
 
-void clear_list(vector<GameObject*> &objects, bool all) {
+void update_delta(Uint64& LAST, Uint64& NOW, double& deltaTime) {
+
+	LAST = NOW;
+	NOW = SDL_GetPerformanceCounter();
+	deltaTime = ((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
+
+}
+
+void clear_list(vector<GameObject*>& objects, bool all) {
 	for (int i = 0; i < objects.size(); i++) {
 		if (!all) {
 			if (!objects.at(i)->isAlive()) {

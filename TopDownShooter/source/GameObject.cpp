@@ -56,7 +56,7 @@ void GameObject::render() {
 	sprite->render(&srcRect, &render_rect, NULL);
 }
 
-void GameObject::power(vector<GameObject*> &list, Uint32 time, double deltaTime) {}
+void GameObject::power(vector<GameObject*> &list, double deltaTime) {}
 
 void GameObject::registerHit() {}
 
@@ -72,7 +72,7 @@ string GameObject::get_type() {
 	return type;
 }
 
-void GameObject::kill() {
+void GameObject::kill(double x, double y, vector<GameObject*>& objs) {
 	this->alive = false;
 }
 

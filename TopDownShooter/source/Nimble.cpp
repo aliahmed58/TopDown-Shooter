@@ -8,9 +8,11 @@ Nimble::Nimble(double x, double y, SDL_Renderer* renderer) : Enemy(x, y, nimble_
 	health = 1;
 	friction = 0.9;
 	type = "nimble";
+
+
 }
 
-void Nimble::power(vector<GameObject*>& objects, Uint32 time, double deltaTime) {
+void Nimble::power(vector<GameObject*>& objects, double deltaTime) {
 	int random = rand() % 1;
 
 
