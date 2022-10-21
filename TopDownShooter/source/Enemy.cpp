@@ -18,7 +18,7 @@ void Enemy::move(double x_val, double y_val, double deltaTime) {
 	translate(x_val, y_val);
 
 	x -= tx * (deltaTime / 10);
-	y += ty * (deltaTime / 10);
+	y += ty * (deltaTime / 20);
 
 	int temp_x = x - 1;
 	int temp_y = y - 1;
@@ -47,6 +47,7 @@ void Enemy::render() {
 
 
 void Enemy::kill(double x, double y, vector<GameObject*>& objs) {
+	cout << health << endl;
 	if (health <= 0) {
 		alive = false;
 		int Num = rand() % 5;

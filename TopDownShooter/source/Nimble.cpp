@@ -9,7 +9,6 @@ Nimble::Nimble(double x, double y, SDL_Renderer* renderer) : Enemy(x, y, nimble_
 	friction = 0.9;
 	type = "nimble";
 
-
 }
 
 void Nimble::power(vector<GameObject*>& objects, double deltaTime) {

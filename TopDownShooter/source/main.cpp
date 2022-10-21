@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 			}
 			counter += deltaTime;
 
-			if (counter > 4000) {
+			if (counter > 5000) {
 				create_enemies(objects);
 				counter = 0;
 			}
@@ -274,11 +274,11 @@ void create_enemies(vector<GameObject*>& objs) {
 			rand_x2 += diff + 20;
 		}
 	}
-	GameObject* r = new Ranger(rand_x, -1, gRenderer, player);
-	GameObject* n = new Nimble(rand_x2, -1, gRenderer);
+	GameObject* r = new Ranger(500, -1, gRenderer, player);
+	//GameObject* n = new Nimble(rand_x2, -1, gRenderer);
 
 	objs.insert(objs.begin(), r);
-	objs.insert(objs.begin(), n);
+	//objs.insert(objs.begin(), n);
 }
 
 bool loadMedia()

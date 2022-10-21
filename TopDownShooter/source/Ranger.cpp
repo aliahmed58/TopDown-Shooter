@@ -4,7 +4,7 @@
 Ranger::Ranger() {};
 
 Ranger::Ranger(double x, double y, SDL_Renderer* renderer, Player* player) : Enemy(x, y, ranger_png, renderer) {
-	health = 3;
+	health = 2;
 	type = "ranger";
 	this->player = player;
 	fireLimit = 0;
