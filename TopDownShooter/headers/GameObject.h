@@ -17,6 +17,7 @@ public:
 	int get_x();
 	int get_y();
 	
+	virtual double get_angle();
 	virtual void power(vector<GameObject*> &list, double deltaTime);
 	virtual void render();
 	virtual void registerHit();

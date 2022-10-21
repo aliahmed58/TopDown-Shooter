@@ -1,5 +1,6 @@
 #include "../headers/Missile.h"
 #include "../headers/consts.h"
+#include "../headers/Smoke.h"
 
 Missile::Missile() {};
 
@@ -8,13 +9,11 @@ Missile::Missile(double x, double y, SDL_Renderer* renderer, GameObject* target,
 	this->target = target;
 	angle = 0;
 	type = "missile";
-
 	collision_rect.w = 32;
 	collision_rect.h = 32;
 }
 
 void Missile::move(double x_val, double y_val, double deltaTime) {
-
 
 	if (y >= target->get_y()) {
 		calc_vector();
@@ -49,10 +48,12 @@ void Missile::calc_vector() {
 	angle = atan2(abs(diff_y), abs(diff_x));
 	angle = angle * (180 / 3.14159);
 	// fix too much tilt
+	angle += 5;
 
 	if (x > target->get_x()) {
 		angle *= -1;
 	}
+
 }
 
 void Missile::render() {
@@ -61,4 +62,8 @@ void Missile::render() {
 
 	render_rect = { (int)x, (int)y, sprite->getWidth(), sprite->getHeight() };
 	sprite->render(&srcRect, &render_rect, angle, flip);
+}
+
+double Missile::get_angle() {
+	return angle;
 }

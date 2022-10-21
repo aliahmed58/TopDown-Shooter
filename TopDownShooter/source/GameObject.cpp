@@ -83,3 +83,7 @@ SDL_Rect& GameObject::getCollisionRect() {
 void GameObject::fire(vector<GameObject*> &objects, double time) {
 
 }
+
+double GameObject::get_angle() {
+	return angle;
+}

@@ -10,6 +10,7 @@ public:
 	void move(double x_val, double y_val, double deltaTime);
 	void calc_vector();
 	void render();
+	double get_angle();
 
 private:
 	Player* player;
@@ -17,4 +18,6 @@ private:
 	double unit_x;
 	double unit_y;
 	double angle;
+
+	unsigned int smoke_counter;
 };

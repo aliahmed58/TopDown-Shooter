@@ -49,7 +49,7 @@ void Enemy::render() {
 void Enemy::kill(double x, double y, vector<GameObject*>& objs) {
 	if (health <= 0) {
 		alive = false;
-		int Num = rand() % 10;
+		int Num = rand() % 5;
 
 		GameObject* E = new Explosion(x, y, 64, renderer);
 		x += 16;

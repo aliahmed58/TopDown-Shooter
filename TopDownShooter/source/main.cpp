@@ -43,7 +43,8 @@ SDL_Texture* loadTexture(std::string path);
 int main(int argc, char* argv[]) {
 
 	vector<GameObject*> objects;
-	vector<GameObject*> missiles;
+	vector<GameObject*> particles;
+
 	bool inMenu = true;
 
 	if (!init()) {
@@ -99,8 +100,10 @@ int main(int argc, char* argv[]) {
 					if (objects.at(i)->get_type() == "missile") {
 						int x = objects.at(i)->get_x();
 						int y = objects.at(i)->get_y();
-						GameObject* S1 = new Smoke(x + 16, y + 32, gRenderer);
-						objects.insert(objects.begin(), S1);
+						GameObject* S1 = new Smoke(x + 3, y + 32,objects.at(i)->get_angle(), gRenderer);
+						GameObject* S2 = new Smoke(x + 3, y + 32, objects.at(i)->get_angle(), gRenderer);
+						particles.insert(particles.begin(), S1);
+						particles.insert(particles.begin(), S2);
 						break;
 					}
 				}
@@ -139,9 +142,17 @@ int main(int argc, char* argv[]) {
 			// renders sprite on screen
 			player->render();
 
+			
 			// render list items
 			for (int i = 0; i < objects.size(); i++) {
 
+				if (objects.at(i)->get_type() == "missile") {
+					for (int p = 0; p < particles.size(); p++) {
+						particles.at(p)->render();
+						particles.at(p)->move(objects.at(i)->get_x(), objects.at(i)->get_y(), deltaTime);
+					}
+				}
+			
 				objects.at(i)->render();
 				objects.at(i)->move(0, 1, deltaTime);
 				objects.at(i)->fire(objects, SDL_GetTicks());
@@ -159,7 +170,8 @@ int main(int argc, char* argv[]) {
 				for (int j = 0; j < objects.size(); j++) {
 
 					if (objects.at(i) == objects.at(j)) continue;
-					if (check_collision(objects.at(i), objects.at(j), 0)) {
+					if (check_collision(objects.at(i), objects.at(j), 0)) {	
+
 						if (objects.at(i)->get_type() == "player_bullet") {
 							explosion = true;
 							objects.at(i)->kill(objects.at(i)->get_x(), objects.at(i)->get_y(), objects);
@@ -190,6 +202,7 @@ int main(int argc, char* argv[]) {
 			// check collisions
 			// clean up list
 			clear_list(objects, false);
+			clear_list(particles, false);
 			// updates screen
 			SDL_RenderPresent(gRenderer);
 			

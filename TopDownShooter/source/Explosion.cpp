@@ -28,7 +28,6 @@ void Explosion::move(double x_val, double y_val, double deltaTime) {
 	int dTime = (int)(deltaTime);
 	double ChangeInAngle = rand() % 5;
 	this->alpha -= ChangeInAlpha * (dTime / 4);
-	cout << alpha << endl;
 	this->angle = (double)((int)(this->angle + ChangeInAngle) % 360);
 	if (this->alpha < 10)
 		this->alive = false;

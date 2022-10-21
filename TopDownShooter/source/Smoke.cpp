@@ -3,10 +3,11 @@
 
 Smoke::Smoke() {};
 
-Smoke::Smoke(double x, double y, SDL_Renderer* renderer) : GameObject(x, y, smoke_png, renderer) {
+Smoke::Smoke(double x, double y,double angle, SDL_Renderer* renderer) : GameObject(x, y, smoke_png, renderer) {
 	this->x = x;
 	this->y = y;
 	type = "smoke";
+	this->angle = angle;
 	SDL_SetTextureBlendMode(this->getTexture()->get_texture(), SDL_BLENDMODE_BLEND);
 	this->RenderHeight = 9 + rand()%4;
 	this->RenderWidth = RenderHeight;
@@ -35,5 +36,5 @@ void Smoke::render() {
 	SDL_Rect srcRect = { 0, 0, sprite->getWidth(), sprite->getHeight()};
 
 	render_rect = { (int)x, (int)y, RenderWidth, RenderHeight };
-	sprite->render(&srcRect, &render_rect, NULL);
+	sprite->render(&srcRect, &render_rect, angle);
 }
